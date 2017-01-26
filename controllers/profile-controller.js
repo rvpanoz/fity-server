@@ -11,6 +11,21 @@ var ProfileController = _.extend({
       user_id: uid
     }));
 
+    //fix date for mongodb
+    // var dateString = data.entry_date;
+    // var parts = dateString.split('/');
+    // var day = parts[0];
+    // var month = parts[1];
+    // var year = parts[2];
+    //
+    // var fd = moment(utils.stringToDate(dateString, "dd/MM/yyyy", "/"));
+
+    // if (fd.isValid()) {
+    //   data.entry_date = fd.toISOString();
+    // } else {
+    //   throw Boom.badRequest('Record: Invalid entry date');
+    // }
+
     profile.save(function(err, record) {
       if (err) {
         reply({

@@ -7,6 +7,7 @@ module.exports = [{
       handler: function (req, reply) {
         var uid = req.auth.credentials.id;
         var data = req.payload;
+        console.log(data);
         return Controller.insert(uid, data, reply);
       }
     }
