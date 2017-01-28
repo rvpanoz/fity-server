@@ -1,8 +1,8 @@
-const Controller = require('../controllers/category-controller');
+const Controller = require('../controllers/activity-controller');
 
 module.exports = [{
     method: 'GET',
-    path: '/data/categories',
+    path: '/data/activities',
     config: {
       handler: function (req, reply) {
         var params = req.params;
@@ -13,7 +13,7 @@ module.exports = [{
   },
   {
     method: 'POST',
-    path: '/data/category',
+    path: '/data/activity',
     config: {
       handler: function (req, reply) {
         var payload = req.payload;
@@ -24,7 +24,7 @@ module.exports = [{
   },
   {
     method: 'PUT',
-    path: '/data/category/{id?}',
+    path: '/data/activity/{id?}',
     config: {
       handler: function (req, reply) {
         var payload = req.payload;
@@ -36,7 +36,7 @@ module.exports = [{
   },
   {
     method: 'DELETE',
-    path: '/data/categories/{id}',
+    path: '/data/activities/{id}',
     config: {
       handler: function (req, reply) {
         var cid = req.params.id;
@@ -47,7 +47,7 @@ module.exports = [{
   },
   {
     method: 'GET',
-    path: '/data/category/{id}',
+    path: '/data/activity/{id}',
     config: {
       handler: function (req, reply) {
         var cid = req.params.id;

@@ -1,7 +1,6 @@
 const Controller = require('../controllers/app');
 const verifyCredentials = require('../util').verifyCredentials;
 const verifyUniqueUser = require('../util').verifyUniqueUser;
-console.log(Controller.users);
 
 module.exports = [{
     method: 'POST',

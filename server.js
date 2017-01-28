@@ -36,7 +36,7 @@ server.connection({
   port: config.port
 });
 
-var app = new require('./controllers/app');
+const app = require('./controllers/app');
 
 server.register(require('hapi-auth-jwt'), (err) => {
   server.auth.strategy('jwt', 'jwt', 'required', {
@@ -49,7 +49,18 @@ server.register(require('hapi-auth-jwt'), (err) => {
   //app routes
   server.route(require('./routes/user-routes'));
   server.route(require('./routes/category-routes'));
+  server.route(require('./routes/activity-routes'));
   server.route(require('./routes/profile-routes'));
+
+  server.route({
+    method: 'GET',
+    path: '/data/types',
+    config: {
+      handler(req, reply) {
+        return app.getTypes(reply);
+      }
+    }
+  })
 
   //*start the server
   server.start(function (err) {

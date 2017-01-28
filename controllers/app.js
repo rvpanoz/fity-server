@@ -15,6 +15,7 @@ const config = require('../config');
 const createToken = require('../token');
 const utils = require('../util');
 const User = require('../models/user');
+const ActivityType = require('../models/type');
 
 //set log level
 wlog.level = 'debug';
@@ -65,6 +66,17 @@ var app = _.extend({}, {
         });
       });
     }
+  },
+  getTypes(reply) {
+    ActivityType.find({}, function(err, types) {
+      if(err) {
+        throw new Error(err);
+      }
+      return reply({
+        success: true,
+        data: types
+      });
+    });
   }
 });
 
