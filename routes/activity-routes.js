@@ -13,7 +13,7 @@ module.exports = [{
   },
   {
     method: 'POST',
-    path: '/data/activity',
+    path: '/data/activities',
     config: {
       handler: function (req, reply) {
         var payload = req.payload;
@@ -24,7 +24,7 @@ module.exports = [{
   },
   {
     method: 'PUT',
-    path: '/data/activity/{id?}',
+    path: '/data/activities/{id?}',
     config: {
       handler: function (req, reply) {
         var payload = req.payload;
@@ -47,12 +47,24 @@ module.exports = [{
   },
   {
     method: 'GET',
-    path: '/data/activity/{id}',
+    path: '/data/activities/{id}',
     config: {
       handler: function (req, reply) {
         var cid = req.params.id;
         var uid = req.auth.credentials.id;
         return Controller.get(uid, cid, reply);
+      }
+    }
+  },
+  {
+    method: 'DELETE',
+    path: '/data/activity/metrics/{id}',
+    config: {
+      handler: function (req, reply) {
+        var aid = req.payload.a_id;
+        var mid = req.payload.m_id;
+        var uid = req.auth.credentials.id;
+        return Controller.removeMetric(uid, aid, mid, reply);
       }
     }
   }

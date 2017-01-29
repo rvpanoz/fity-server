@@ -10,10 +10,10 @@ wlog.level = 'debug'
 
 var activityController = _.extend({
 
-  browse: function (uid, reply) {
+  browse: function(uid, reply) {
     Activity.find({
       user_id: uid
-    }).populate('activity_type').lean().exec(function (err, activities) {
+    }).populate('activity_type').lean().exec(function(err, activities) {
       if (err) {
         throw Boom.badRequest(err);
       }
@@ -24,12 +24,12 @@ var activityController = _.extend({
     });
   },
 
-  insert: function (uid, data, reply) {
+  insert: function(uid, data, reply) {
     var activity = new Activity(_.extend(data, {
       user_id: uid
     }));
 
-    activity.save(function (err, new_activity) {
+    activity.save(function(err, new_activity) {
       if (err) {
         reply({
           success: false,
@@ -47,11 +47,11 @@ var activityController = _.extend({
     });
   },
 
-  update: function (uid, id, data, reply) {
+  update: function(uid, id, data, reply) {
     Activity.findOne({
       user_id: uid,
       _id: id
-    }, function (err, activity) {
+    }, function(err, activity) {
       if (err) {
         throw Boom.badRequest(err);
       }
@@ -61,7 +61,7 @@ var activityController = _.extend({
       activity.category_id = data.category_id;
       activity.updated_at = moment().toISOString();
 
-      if(data.metrics && !_.isArray(data.metrics)) {
+      if (data.metrics && !_.isArray(data.metrics)) {
         var fd = moment(utils.stringToDate(data.metrics['date'], "dd/MM/yyyy", "/"));
         if (fd.isValid()) {
           data.metrics['date'] = fd.toISOString();
@@ -70,13 +70,18 @@ var activityController = _.extend({
         }
         var reps = data.metrics['reps'];
         var weight = data.metrics['weight'];
-        if(reps && weight) {
-          data.metrics['sets'] = [{reps: reps, weight: weight}];
+        if (reps && weight) {
+          data.metrics['sets'] = [{
+            reps: reps,
+            weight: weight
+          }];
         }
+
+        data.metrics['activity_id'] = activity.id;
         activity.metrics.push(data.metrics);
       }
 
-      activity.save(function (err, updated_activity) {
+      activity.save(function(err, updated_activity) {
         if (err) {
           throw Boom.badImplementation('activity:  Error on updating activity', err);
         }
@@ -88,11 +93,11 @@ var activityController = _.extend({
     });
   },
 
-  get: function (uid, id, reply) {
+  get: function(uid, id, reply) {
     Activity.findOne({
       user_id: uid,
       _id: id
-    }).populate('activity_type').exec(function (err, activity) {
+    }).populate('activity_type').exec(function(err, activity) {
       if (err) {
         throw Boom.badRequest(err);
       }
@@ -103,16 +108,16 @@ var activityController = _.extend({
     });
   },
 
-  remove: function (uid, id, reply) {
+  remove: function(uid, id, reply) {
     Activity.findOne({
       user_id: uid,
       _id: id
-    }, function (err, activity) {
+    }, function(err, activity) {
       if (err) {
         throw Boom.badRequest(err);
       }
 
-      activity.remove(function (err, removed_activity) {
+      activity.remove(function(err, removed_activity) {
         if (err) {
           throw Boom.badImplementation('activity:  Error on deleting activity', err);
         }
@@ -122,8 +127,23 @@ var activityController = _.extend({
         })
       });
     });
+  },
+
+  removeMetric: function(uid, aid, mid, reply) {
+    Activity.findByIdAndUpdate(aid, {
+      $pull: {
+        metrics: {
+          _id: mid
+        }
+      }
+    }, function(err, metric) {
+      reply({
+        success: true,
+        data: [metric]
+      })
+    });
   }
 
-})
+});
 
 module.exports = activityController;

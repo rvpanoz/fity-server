@@ -25,6 +25,10 @@ var Metric = new Mongoose.Schema({
   notes: {
     type: String,
     required: [false, '']
+  },
+  activity_id: {
+    type: Mongoose.Schema.ObjectId,
+    ref: 'Activity'
   }
 });
 
