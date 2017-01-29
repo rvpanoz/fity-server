@@ -51,6 +51,8 @@ var ProfileController = _.extend({
         throw new Error(err);
       }
       profile.weight = data.weight;
+      profile.setsReps = data.setsReps;
+      profile.setsWeight = data.setsWeight;
       profile.updated_at = new Date();
       profile.save(function(err, updated_profile) {
         if(err) {

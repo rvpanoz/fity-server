@@ -5,6 +5,8 @@ const Boom = require('boom')
 const async = require('async')
 const moment = require('moment')
 const Activity = require('../models/activity')
+const wlog = require('winston');
+wlog.level = 'debug'
 
 var activityController = _.extend({
 
@@ -49,25 +51,30 @@ var activityController = _.extend({
     Activity.findOne({
       user_id: uid,
       _id: id
-    }, function (err, activity) {;
+    }, function (err, activity) {
       if (err) {
         throw Boom.badRequest(err);
       }
 
       activity.name = data.name;
-      activity.activity_type = data.activity_type._id;
+      activity.activity_type = data.activity_type;
       activity.category_id = data.category_id;
       activity.updated_at = moment().toISOString();
 
-      var fd = moment(utils.stringToDate(data.metrics['date'], "dd/MM/yyyy", "/"));
-      if (fd.isValid()) {
-        data.metrics['date'] = fd.toISOString();
-      } else {
-        throw Boom.badRequest('Metrics: Invalid date');
+      if(data.metrics && !_.isArray(data.metrics)) {
+        var fd = moment(utils.stringToDate(data.metrics['date'], "dd/MM/yyyy", "/"));
+        if (fd.isValid()) {
+          data.metrics['date'] = fd.toISOString();
+        } else {
+          throw Boom.badRequest('Metrics: Invalid date');
+        }
+        var reps = data.metrics['reps'];
+        var weight = data.metrics['weight'];
+        if(reps && weight) {
+          data.metrics['sets'] = [{reps: reps, weight: weight}];
+        }
+        activity.metrics.push(data.metrics);
       }
-      
-      //add metrics
-      activity.metrics.push(data.metrics);
 
       activity.save(function (err, updated_activity) {
         if (err) {

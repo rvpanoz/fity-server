@@ -12,6 +12,12 @@ const ProfileSchema = new Schema({
   weight: {
     type: Number
   },
+  setsReps: {
+    type: Number
+  },
+  setsWeight: {
+    type: Number
+  },
   updated_at: {
     type: Date,
     default: new Date()

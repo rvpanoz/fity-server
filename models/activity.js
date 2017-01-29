@@ -19,7 +19,7 @@ var Metric = new Mongoose.Schema({
     required: [false, 'Field metric_type is required']
   },
   sets: {
-    type: Mongoose.Schema.Types.Mixed,
+    type: Array,
     required: [false, '']
   },
   notes: {
