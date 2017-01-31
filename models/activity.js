@@ -2,29 +2,24 @@ var Mongoose = require('mongoose');
 
 var Metric = new Mongoose.Schema({
   duration: {
-    type: Number,
-    required: [false, '']
+    type: Number
   },
   distance: {
-    type: Number,
-    required: [false, '']
+    type: Number
   },
   date: {
     type: Date,
-    required: [false, '']
+    required: [true, 'Field date is required']
   },
   metric_type: {
     type: Mongoose.Schema.ObjectId,
-    ref: 'Type',
-    required: [false, 'Field metric_type is required']
+    ref: 'Type'
   },
   sets: {
-    type: Array,
-    required: [false, '']
+    type: Array
   },
   notes: {
-    type: String,
-    required: [false, '']
+    type: String
   },
   activity_id: {
     type: Mongoose.Schema.ObjectId,
@@ -35,23 +30,22 @@ var Metric = new Mongoose.Schema({
 var ActivitySchema = new Mongoose.Schema({
   name: {
     type: String,
-    required: [false, 'Field name is required']
+    required: [true, 'Field name is required']
   },
   category_id: {
     type: Mongoose.Schema.ObjectId,
-    ref: 'Category',
-    required: [false, 'Field category_id is required']
+    ref: 'Category'
   },
   activity_type: {
     type: Mongoose.Schema.ObjectId,
     ref: 'Type',
-    required: [false, 'Field activity_type is required']
+    required: [true, 'Field activity_type is required']
   },
   metrics: [Metric],
   user_id: {
     type: Mongoose.Schema.ObjectId,
     ref: 'User',
-    required: [false, 'Field user_id is required']
+    required: [true, 'Field user_id is required']
   },
   updated_at: {
     type: Date

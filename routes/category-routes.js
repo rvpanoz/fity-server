@@ -12,6 +12,17 @@ module.exports = [{
     }
   },
   {
+    method: 'GET',
+    path: '/data/categories/{id}',
+    config: {
+      handler: function (req, reply) {
+        var cid = req.params.id;
+        var uid = req.auth.credentials.id;
+        return Controller.get(uid, cid, reply);
+      }
+    }
+  },
+  {
     method: 'POST',
     path: '/data/category',
     config: {
@@ -24,7 +35,7 @@ module.exports = [{
   },
   {
     method: 'PUT',
-    path: '/data/category/{id?}',
+    path: '/data/categories/{id?}',
     config: {
       handler: function (req, reply) {
         var payload = req.payload;
@@ -36,23 +47,12 @@ module.exports = [{
   },
   {
     method: 'DELETE',
-    path: '/data/categories/{id}',
-    config: {
-      handler: function (req, reply) {
-        var cid = req.params.id;
-        var uid = req.auth.credentials.id;
-        return Controller.remove(uid, cid, reply);
-      }
-    }
-  },
-  {
-    method: 'GET',
     path: '/data/category/{id}',
     config: {
       handler: function (req, reply) {
         var cid = req.params.id;
         var uid = req.auth.credentials.id;
-        return Controller.get(uid, cid, reply);
+        return Controller.remove(uid, cid, reply);
       }
     }
   }

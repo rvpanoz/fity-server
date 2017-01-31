@@ -56,6 +56,7 @@ server.register(require('hapi-auth-jwt'), (err) => {
     method: 'GET',
     path: '/data/types',
     config: {
+      auth: false,
       handler(req, reply) {
         return app.getTypes(reply);
       }

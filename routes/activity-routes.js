@@ -13,7 +13,7 @@ module.exports = [{
   },
   {
     method: 'POST',
-    path: '/data/activities',
+    path: '/data/activity',
     config: {
       handler: function (req, reply) {
         var payload = req.payload;
@@ -36,7 +36,7 @@ module.exports = [{
   },
   {
     method: 'DELETE',
-    path: '/data/activities/{id}',
+    path: '/data/activities/{id?}',
     config: {
       handler: function (req, reply) {
         var cid = req.params.id;
@@ -47,7 +47,7 @@ module.exports = [{
   },
   {
     method: 'GET',
-    path: '/data/activities/{id}',
+    path: '/data/activity/{id}',
     config: {
       handler: function (req, reply) {
         var cid = req.params.id;

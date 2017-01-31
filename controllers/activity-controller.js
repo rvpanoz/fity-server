@@ -58,7 +58,11 @@ var activityController = _.extend({
 
       activity.name = data.name;
       activity.activity_type = data.activity_type;
-      activity.category_id = data.category_id;
+
+      if(data.category_id) {
+        activity.category_id = data.category_id;
+      }
+      
       activity.updated_at = moment().toISOString();
 
       if (data.metrics && !_.isArray(data.metrics)) {
