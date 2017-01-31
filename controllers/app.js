@@ -17,7 +17,6 @@ const utils = require('../util');
 const User = require('../models/user');
 const ActivityType = require('../models/type');
 
-//set log level
 wlog.level = 'debug';
 
 function hashPassword(password, cb) {
