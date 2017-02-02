@@ -64,8 +64,9 @@ module.exports = [{
     path: '/data/activity/metrics/{id}',
     config: {
       handler: function (req, reply) {
+        console.log(req.params);
         var aid = req.payload.a_id;
-        var mid = req.payload.m_id;
+        var mid = req.params.id;
         var uid = req.auth.credentials.id;
         return Controller.removeMetric(uid, aid, mid, reply);
       }
