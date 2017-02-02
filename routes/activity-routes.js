@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const Controller = require('../controllers/activity-controller');
 
 module.exports = [{
@@ -13,12 +14,13 @@ module.exports = [{
   },
   {
     method: 'POST',
-    path: '/data/activity',
+    path: '/data/activities',
     config: {
       handler: function (req, reply) {
-        var payload = req.payload;
-        var uid = req.auth.credentials.id;
-        return Controller.insert(uid, payload, reply);
+        var payload = _.extend(req.payload, {
+          user_id: req.auth.credentials.id
+        });
+        return Controller.insert(payload, reply);
       }
     }
   },
@@ -27,10 +29,11 @@ module.exports = [{
     path: '/data/activities/{id?}',
     config: {
       handler: function (req, reply) {
-        var payload = req.payload;
         var id = req.params.id;
-        var uid = req.auth.credentials.id;
-        return Controller.update(uid, id, payload, reply);
+        var payload = _.extend(req.payload, {
+          user_id: req.auth.credentials.id
+        });
+        return Controller.update(id, payload, reply);
       }
     }
   },
@@ -47,7 +50,7 @@ module.exports = [{
   },
   {
     method: 'GET',
-    path: '/data/activity/{id}',
+    path: '/data/activities/{id}',
     config: {
       handler: function (req, reply) {
         var cid = req.params.id;

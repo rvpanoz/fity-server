@@ -24,7 +24,7 @@ module.exports = [{
   },
   {
     method: 'POST',
-    path: '/data/category',
+    path: '/data/categories',
     config: {
       handler: function (req, reply) {
         var payload = req.payload;

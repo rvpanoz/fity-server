@@ -1,19 +1,26 @@
-const config = require('../config')
-const _ = require('lodash')
-const utils = require('../util')
-const Boom = require('boom')
-const async = require('async')
-const moment = require('moment')
-const Activity = require('../models/activity')
+const config = require('../config');
+const _ = require('lodash');
+const utils = require('../util');
+const Boom = require('boom');
+const async = require('async');
+const moment = require('moment');
+const Activity = require('../models/activity');
 const wlog = require('winston');
-wlog.level = 'debug'
+wlog.level = 'debug';
 
 var activityController = _.extend({
 
   browse: function(uid, reply) {
+    var populateQuery = [{
+        path: 'activity_type'
+      },
+      {
+        path: 'category_id'
+      }
+    ];
     Activity.find({
       user_id: uid
-    }).populate('activity_type').lean().exec(function(err, activities) {
+    }).populate(populateQuery).lean().exec(function(err, activities) {
       if (err) {
         throw Boom.badRequest(err);
       }
@@ -24,32 +31,25 @@ var activityController = _.extend({
     });
   },
 
-  insert: function(uid, data, reply) {
-    var activity = new Activity(_.extend(data, {
-      user_id: uid
-    }));
-
+  insert: function(data, reply) {
+    var activity = new Activity(data);
     activity.save(function(err, new_activity) {
       if (err) {
-        reply({
-          success: false,
-          data: [],
-          error: err
-        });
+        reply(Boom.badRequest(err));
       } else if (new_activity) {
         reply({
           success: true,
           data: new_activity
         });
       } else {
-        throw Boom.badRequest(err);
+        reply(Boom.badRequest(err));
       }
     });
   },
 
-  update: function(uid, id, data, reply) {
+  update: function(id, data, reply) {
     Activity.findOne({
-      user_id: uid,
+      user_id: data.user_id,
       _id: id
     }, function(err, activity) {
       if (err) {
@@ -58,12 +58,11 @@ var activityController = _.extend({
 
       activity.name = data.name;
       activity.activity_type = data.activity_type;
+      activity.updated_at = moment().toISOString();
 
-      if(data.category_id) {
+      if (data.category_id) {
         activity.category_id = data.category_id;
       }
-      
-      activity.updated_at = moment().toISOString();
 
       if (data.metrics && !_.isArray(data.metrics)) {
         var fd = moment(utils.stringToDate(data.metrics['date'], "dd/MM/yyyy", "/"));
@@ -80,7 +79,6 @@ var activityController = _.extend({
             weight: weight
           }];
         }
-
         data.metrics['activity_id'] = activity.id;
         activity.metrics.push(data.metrics);
       }
@@ -98,10 +96,17 @@ var activityController = _.extend({
   },
 
   get: function(uid, id, reply) {
+    var populateQuery = [{
+        path: 'activity_type'
+      },
+      {
+        path: 'category_id'
+      }
+    ];
     Activity.findOne({
       user_id: uid,
       _id: id
-    }).populate('activity_type').exec(function(err, activity) {
+    }).populate(populateQuery).exec(function(err, activity) {
       if (err) {
         throw Boom.badRequest(err);
       }
