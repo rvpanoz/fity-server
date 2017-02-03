@@ -16,8 +16,15 @@ const createToken = require('../token');
 const utils = require('../util');
 const User = require('../models/user');
 const ActivityType = require('../models/type');
+const winston = require('winston');
 
-wlog.level = 'debug';
+winston.level = 'debug';
+var logger = new(winston.Logger)({
+  transports: [new(winston.transports.Console)(), new(winston.transports.File)({
+    filename: 'appLog.log',
+    timestamp: true
+  })]
+});
 
 function hashPassword(password, cb) {
   // Generate a salt at level 10 strength
@@ -76,6 +83,17 @@ var app = _.extend({}, {
         data: types
       });
     });
+  },
+  log(level, msg) {
+    if(level) {
+      switch (level) {
+        case 'error':
+          logger.error(level, msg);
+          break;
+        default:
+          logger.info(level, msg);
+      }
+    }
   }
 });
 

@@ -5,8 +5,7 @@ const Boom = require('boom');
 const async = require('async');
 const moment = require('moment');
 const Activity = require('../models/activity');
-const wlog = require('winston');
-wlog.level = 'debug';
+const app = require('./app');
 
 var activityController = _.extend({
 
@@ -37,6 +36,7 @@ var activityController = _.extend({
       if (err) {
         reply(Boom.badRequest(err));
       } else if (new_activity) {
+        app.log("info", "Document with _id:" + new_activity._id +" was added.");
         reply({
           success: true,
           data: new_activity
@@ -87,6 +87,7 @@ var activityController = _.extend({
         if (err) {
           throw Boom.badImplementation('activity:  Error on updating activity', err);
         }
+        app.log("error", "Document with _id:" + updated_activity._id +" was updated.");
         reply({
           success: true,
           data: updated_activity
